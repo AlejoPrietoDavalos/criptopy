@@ -1,5 +1,13 @@
-""" ### KLine
+"""
+### KLine
 - Objeto contenedor de datos para validar y serializar en tiempo real.
+- También se usa para serializar los precios y guardar en MongoDB.
+
+### Nomenclatura:
+- `body:` Distancia entre el precio de apertura y cierre.
+- `shadow:` Distancia entre el precio mas alto y bajo alcanzado en la vela.
+- `bullish:` Si el precio de cierre es `mayor` al de apertura `(sube)`.
+- `bearish:` Si el precio de cierre es `menor` al de apertura `(baja)`.
 """
 from __future__ import annotations
 from typing import List, Type, TypeVar, Iterable
