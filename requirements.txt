@@ -1,0 +1,7 @@
+binance-futures-connector==4.0.0
+pydantic==2.6.0
+pymongo==4.6.1
+dearpygui==1.10.1
+matplotlib==3.8.2
+pandas==2.2.0
+numpy==1.26.3
