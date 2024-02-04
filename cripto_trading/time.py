@@ -21,3 +21,13 @@ def is_datetime_utc(date: datetime) -> bool:
         if date.tzinfo.utcoffset(date) == timezone.utc.utcoffset(date):
             return True
     return False
+
+
+def validate_time_ms(t: int | datetime) -> int:
+    """ Retorna el tiempo en timestamp [ms], tz=UTC."""
+    if isinstance(t, int):
+        return t
+    elif isinstance(t, datetime):
+        return datetime2timestamp_utc(t)
+    else:
+        raise ValueError("Tiempo incorrecto.")
