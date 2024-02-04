@@ -19,8 +19,8 @@ def get_timestamp_now(in_ms: bool = True) -> int:
 
 def get_datetime(
         year: SupportsIndex,
-        month: Optional[SupportsIndex] = None,
-        day: Optional[SupportsIndex] = None,
+        month: SupportsIndex,
+        day: SupportsIndex,
         hour: SupportsIndex = 0,
         minute: SupportsIndex = 0,
         second: SupportsIndex = 0,
