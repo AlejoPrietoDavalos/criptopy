@@ -18,7 +18,15 @@ from bson.decimal128 import Decimal128
 from general_utils.decimals import validate_decimal, serialize_decimal
 from general_utils.time_utc import timestamp2datetime
 
-__all__ = ["KLine"]
+__all__ = ["KLine", "TIME_OPEN", "PRICE_OPEN", "PRICE_HIGH", "PRICE_LOW", "PRICE_CLOSE", "TIME_CLOSE"]
+
+
+TIME_OPEN = "time_open"
+PRICE_OPEN = "price_open"
+PRICE_HIGH = "price_high"
+PRICE_LOW = "price_low"
+PRICE_CLOSE = "price_close"
+TIME_CLOSE = "time_close"
 
 
 class KLine(BaseModel):
@@ -96,14 +104,14 @@ class KLine(BaseModel):
         - https://binance-docs.github.io/apidocs/futures/en/#index-price-kline-candlestick-data
         """
         time_open, price_open, price_high, price_low, price_close, _, time_close, _, _, _, _, _ = kline_binance
-        return cls(
-            time_open = int(time_open),
-            price_open = Decimal(price_open),
-            price_high = Decimal(price_high),
-            price_low = Decimal(price_low),
-            price_close = Decimal(price_close),
-            time_close = int(time_close)
-        )
+        return cls(**{
+            TIME_OPEN: int(time_open),
+            PRICE_OPEN: Decimal(price_open),
+            PRICE_HIGH: Decimal(price_high),
+            PRICE_LOW: Decimal(price_low),
+            PRICE_CLOSE: Decimal(price_close),
+            TIME_CLOSE: int(time_close)
+        })
 
     @field_validator("price_open", "price_high", "price_low", "price_close", mode="plain")
     def validate_prices(cls, price: str | Decimal | Decimal128) -> Decimal:
