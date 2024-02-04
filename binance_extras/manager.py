@@ -5,13 +5,15 @@ from datetime import datetime
 from binance.um_futures import UMFutures
 
 from general_utils.coins import SymbolPairsEnum, IntervalKLineEnum
-from binance_extras.searchs import SearchKLines
 from cripto_trading.kline import KLine
 from general_utils.time_utc import get_timestamp_now, validate_time_ms
 
+from binance_extras.searchs import SearchKLines
+from binance_extras.utils import get_um_futures_client
+
 class BinanceManager:
-    def __init__(self, key=None, secret=None, **kwargs):
-        self._um = UMFutures(key, secret, **kwargs)
+    def __init__(self, **kwargs):
+        self._um = get_um_futures_client(**kwargs)
 
     @property
     def um(self) -> UMFutures:
