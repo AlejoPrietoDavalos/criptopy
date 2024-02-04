@@ -77,7 +77,7 @@ class BinanceManager:
             end_time: int | datetime,
         ) -> Generator[SearchKLines, None, None]:
         """ Realiza la búsqueda de atrás para adelante en el rango de fecha especificado."""
-        ms_interval = IntervalKLineEnum(interval).microseconds
+        ms_interval = IntervalKLineEnum(interval).miliseconds
         start_time = validate_time_ms(start_time)
         end_time = validate_time_ms(end_time)
 

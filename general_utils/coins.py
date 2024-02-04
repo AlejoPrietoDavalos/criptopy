@@ -69,7 +69,7 @@ class IntervalKLineEnum(Enum):
         return self.minutes * 60
     
     @property
-    def microseconds(self) -> int:
+    def miliseconds(self) -> int:
         return self.seconds * 1000
 
 
