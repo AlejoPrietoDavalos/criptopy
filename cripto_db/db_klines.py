@@ -45,9 +45,11 @@ class DBKLines:
     def collections(self) -> Dict[str, CollectionKLines]:
         return self._collections
 
-    def get_collection(self, symbol: SymbolPairsEnum, interval: IntervalKLineEnum) -> None:
-        key_search = nomenclatura_klines(symbol, interval)
-        if key_search not in self.collections:
-            collection = self.db[key_search]
-            self.collections[key_search] = CollectionKLines(collection=collection)
-        return self.collections[key_search]
+    
+    def set_unique_keys(self) -> None:
+        for symbol, interval in iter_all_symbol_interval():
+            coll_name = get_collection_name(symbol, interval)
+            collection = self.get_collection(symbol, interval)
+            collection.collection.create_index([(TIME_OPEN, ASCENDING)], unique=True)
+            print(f"Creación de índice para: {coll_name}")
+
