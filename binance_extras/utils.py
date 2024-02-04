@@ -1,5 +1,7 @@
 from typing import Tuple, NewType
+from dotenv import load_dotenv
 import os
+load_dotenv()
 
 from binance.um_futures import UMFutures
 
