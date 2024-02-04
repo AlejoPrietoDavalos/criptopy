@@ -1,5 +1,5 @@
 """ Abstracción de la API de Binance."""
-from typing import List
+from typing import List, Generator
 from datetime import datetime
 
 from binance.um_futures import UMFutures
@@ -56,7 +56,7 @@ class BinanceManager:
             limit: int,
             start_time: int | datetime,
             end_time: int | datetime,
-        ) -> List[KLine]:
+        ) -> Generator[List[KLine], None, None]:
         iter_searchs = self.iter_search_klines(
             symbol = symbol,
             interval = interval,
@@ -74,7 +74,7 @@ class BinanceManager:
             limit: int,
             start_time: int | datetime,
             end_time: int | datetime,
-        ) -> SearchKLines:
+        ) -> Generator[SearchKLines, None, None]:
         """ Realiza la búsqueda de atrás para adelante en el rango de fecha especificado."""
         ms_interval = IntervalEnum(interval).microseconds
         start_time = validate_time_ms(start_time)
