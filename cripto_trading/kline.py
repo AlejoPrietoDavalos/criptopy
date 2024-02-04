@@ -16,8 +16,8 @@ from decimal import Decimal
 from pydantic import BaseModel, ConfigDict, Field, field_serializer, field_validator
 from bson.decimal128 import Decimal128
 
-from cripto_trading.decimals import validate_decimal, serialize_decimal
-from cripto_trading.time import timestamp2datetime_utc
+from general_utils.decimals import validate_decimal, serialize_decimal
+from general_utils.time import timestamp2datetime_utc
 
 __all__ = ["KLine"]
 
