@@ -6,7 +6,7 @@ from pydantic import BaseModel, Field, ConfigDict, field_validator
 
 from binance_extras.intervals import IntervalEnum
 from binance_extras.coins import SymbolPairsEnum
-from general_utils.time import validate_time_ms
+from general_utils.time_utc import validate_time_ms
 
 __all__ = ["SearchKLines"]
 

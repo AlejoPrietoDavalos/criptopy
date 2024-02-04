@@ -8,7 +8,6 @@
 - `bullish:` Si el precio de cierre es `mayor` al de apertura `(sube)`.
 - `bearish:` Si el precio de cierre es `menor` al de apertura `(baja)`.
 """
-from __future__ import annotations
 from typing import Self
 from datetime import datetime, timedelta
 from decimal import Decimal
@@ -17,7 +16,7 @@ from pydantic import BaseModel, ConfigDict, Field, field_serializer, field_valid
 from bson.decimal128 import Decimal128
 
 from general_utils.decimals import validate_decimal, serialize_decimal
-from general_utils.time import timestamp2datetime_utc
+from general_utils.time_utc import timestamp2datetime
 
 __all__ = ["KLine"]
 
@@ -65,11 +64,11 @@ class KLine(BaseModel):
 
     @property
     def date_open(self) -> datetime:
-        return timestamp2datetime_utc(self.time_open)
+        return timestamp2datetime(self.time_open)
     
     @property
     def date_close(self) -> datetime:
-        return timestamp2datetime_utc(self.time_close)
+        return timestamp2datetime(self.time_close)
 
     @property
     def price_body_delta(self) -> Decimal:

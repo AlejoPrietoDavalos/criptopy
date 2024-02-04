@@ -5,6 +5,7 @@ from binance.um_futures import UMFutures
 
 from binance_extras.searchs import SearchKLines
 from cripto_trading.kline import KLine
+from general_utils.time_utc import get_datetime_now, datetime2timestamp
 
 class BinanceManager:
     def __init__(self, key=None, secret=None, **kwargs):
