@@ -1,30 +1,46 @@
-from typing import Dict
+from typing import Dict, List
 
-from pymongo import MongoClient
+from pymongo import MongoClient, ASCENDING, UpdateOne
+from pymongo.results import BulkWriteResult
 from pymongo.database import Database
 from pymongo.collection import Collection
 
 from cripto_db.utils import get_client_cripto_db, get_klines_cripto_db
-from general_utils.coins import SymbolPairsEnum, IntervalKLineEnum
+from cripto_trading.kline import KLine, TIME_OPEN
+from general_utils.coins import SymbolPairsEnum, IntervalKLineEnum, iter_all_symbol_interval
 
 
-def nomenclatura_klines(symbol: SymbolPairsEnum, interval: IntervalKLineEnum):
+def get_collection_name(symbol: SymbolPairsEnum, interval: IntervalKLineEnum):
     return f"{symbol.value}_{interval.value}"
 
+def filter_time_open(time_open: int) -> dict:
+    return {TIME_OPEN: time_open}
 
-
-
+def kline_to_update_one(kline: KLine) -> UpdateOne:
+    """ Transforma el KLine en un UpdateOne para la subida a la DB."""
+    return UpdateOne(
+        filter_time_open(kline.time_open),           # Criterio de búsqueda por time_open
+        {'$setOnInsert': kline.model_dump()},   # $setOnInsert solo actualiza en caso de insertar
+        upsert = True                           # Realiza un insert si el documento no existe.
+    )
 
 class CollectionKLines:
-    def __init__(self, collection: Collection):
-        self._collection = collection
+    def __init__(self, db: Database, coll_name: str):
+        self._collection = db[coll_name]
+        self._coll_name = coll_name
     
     @property
     def collection(self) -> Collection:
         return self._collection
     
-    # TODO: Implementar lógica de búsqueda.
-
+    @property
+    def coll_name(self) -> str:
+        return self._coll_name
+    
+    def insert_klines(self, klines: List[KLine]) -> BulkWriteResult:
+        operations = [kline_to_update_one(kline) for kline in klines]
+        result = self.collection.bulk_write(operations)
+        return result
 
 
 class DBKLines:
