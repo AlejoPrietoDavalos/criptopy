@@ -6,7 +6,7 @@ from binance.um_futures import UMFutures
 
 from general_utils.coins import SymbolPairsEnum, IntervalKLineEnum
 from cripto_trading.kline import KLine
-from general_utils.time_utc import get_timestamp_now, validate_time_ms
+from general_utils.time_utc import get_timestamp_now, get_datetime, validate_time_ms
 
 from binance_extras.searchs import SearchKLines
 from binance_extras.utils import get_um_futures_client
@@ -94,3 +94,17 @@ class BinanceManager:
 
             i += 1
             start_time_aux = start_time + i*ms_interval*limit
+
+    def timestamp_first_data(self, symbol: SymbolPairsEnum) -> int:
+        """ Busca desde el tiempo UNIX todos los intervalos. Se queda con el de menor `time_open`."""
+        klines: List[KLine] = []
+        for interval in IntervalKLineEnum:
+            s = SearchKLines(
+                symbol = symbol,
+                interval = interval,
+                limit = 1,
+                start_time = 1  # Tiempo 0 de UNIX.
+            )
+            klines.extend(self.mark_price_klines(s))
+        klines.sort(key=lambda kline: kline.time_open)
+        return klines[0].time_open
