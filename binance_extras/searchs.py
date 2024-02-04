@@ -14,7 +14,7 @@ __all__ = ["SearchKLines"]
 class SearchKLines(BaseModel):
     symbol: SymbolPairsEnum
     interval: IntervalEnum
-    limit: int = Field(default=1000, gt=0, le=1000)
+    limit: int = Field(default=1500, gt=0, le=1500)
     start_time: Optional[int] = Field(default=None, gt=0, serialization_alias="startTime")
     end_time: Optional[int] = Field(default=None, gt=0, serialization_alias="endTime")
 
