@@ -92,7 +92,7 @@ class KLine(BaseModel):
         return self.price_close < self.price_open
 
     @classmethod
-    def from_binance(cls: Type[T_KLine], kline_binance: list) -> T_KLine:
+    def from_binance(cls, kline_binance: list) -> Self:
         """ Ver `UMFutures.mark_price_klines()` para documentación.
         - https://binance-docs.github.io/apidocs/futures/en/#index-price-kline-candlestick-data
         """
@@ -113,37 +113,3 @@ class KLine(BaseModel):
     @field_serializer("price_open", "price_high", "price_low", "price_close", when_used="always")
     def serialice_prices(price: Decimal) -> Decimal128:
         return serialize_decimal(price)
-
-
-T_KLineList = TypeVar("T_KLineList", bound="KLineList")
-
-class KLineList(List[KLine]):
-    def __init__(self, klines: Iterable[KLine] = None):
-        if klines is None:
-            klines = []
-        super().__init__(self._validate_kline(kline) for kline in klines)
-    
-    def __setitem__(self, idx: int, kline: KLine):
-        super().__setitem__(idx, self._validate_kline(kline))
-
-    @classmethod
-    def from_binance(cls: Type[T_KLineList], klines_binance: List[list]) -> T_KLineList:
-        return cls(KLine.from_binance(kline) for kline in klines_binance)
-
-    def insert(self, idx: int, kline: KLine):
-        super().insert(idx, self._validate_kline(kline))
-
-    def append(self, kline: KLine):
-        super().append(self._validate_kline(kline))
-
-    def extend(self, kline_list: KLineList):
-        if isinstance(kline_list, type(self)):
-            super().extend(kline_list)
-        else:
-            super().extend(self._validate_kline(kline) for kline in kline_list)
-    
-    def _validate_kline(self, kline: KLine) -> KLine:
-        if isinstance(kline, KLine):
-            return kline
-        else:
-            raise ValueError("Valor incorrecto para KLine.")
