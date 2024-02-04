@@ -8,10 +8,13 @@ __all__ = [
     "datetime2timestamp", "validate_time_ms"
 ]
 
+def round_datetime_to_ms(date: datetime) -> datetime:
+    new_microsecond = (date.microsecond // 1000) * 1000
+    return date.replace(microsecond=new_microsecond)
 
 def get_datetime_now() -> datetime:
     """ Retorna el tiempo actual en UTC."""
-    return datetime.now(tz=UTC)
+    return round_datetime_to_ms(datetime.now(tz=UTC))
 
 def get_timestamp_now(in_ms: bool = True) -> int:
     date_now = get_datetime_now()
@@ -26,7 +29,8 @@ def get_datetime(
         second: SupportsIndex = 0,
         microsecond: SupportsIndex = 0,
     ) -> datetime:
-    return datetime(year, month, day, hour, minute, second, microsecond, tzinfo=UTC)
+    date = datetime(year, month, day, hour, minute, second, microsecond, tzinfo=UTC)
+    return round_datetime_to_ms(date)
 
 def timestamp2datetime(t: int, is_ms: bool = True) -> datetime:
     """ Recibe un timestamp en `ms`, retorna el datetime en UTC."""
