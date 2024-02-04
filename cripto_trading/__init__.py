@@ -1,1 +1,1 @@
-from cripto_trading.klines import KLine, KLineList
+from cripto_trading.klines import KLine

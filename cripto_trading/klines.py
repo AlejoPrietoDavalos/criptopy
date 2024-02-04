@@ -1,38 +1,57 @@
 """
-### KLine
+- `KLine:` Velas japonesas.
 - Objeto contenedor de datos para validar y serializar en tiempo real.
 - También se usa para serializar los precios y guardar en MongoDB.
 
-### Nomenclatura:
 - `body:` Distancia entre el precio de apertura y cierre.
 - `shadow:` Distancia entre el precio mas alto y bajo alcanzado en la vela.
 - `bullish:` Si el precio de cierre es `mayor` al de apertura `(sube)`.
 - `bearish:` Si el precio de cierre es `menor` al de apertura `(baja)`.
 """
 from __future__ import annotations
-from typing import List, Type, TypeVar, Iterable
+from typing import Self
 from datetime import datetime, timedelta
 from decimal import Decimal
 
-from pydantic import Field, field_serializer, field_validator
+from pydantic import BaseModel, ConfigDict, Field, field_serializer, field_validator
 from bson.decimal128 import Decimal128
 
 from cripto_trading.decimals import validate_decimal, serialize_decimal
-from cripto_trading.base import BasePricesModel
 from cripto_trading.time import timestamp2datetime_utc
 
-__all__ = ["KLine", "KLineList"]
+__all__ = ["KLine"]
 
 
-T_KLine = TypeVar("T_KLine", bound="KLine")
+class KLine(BaseModel):
+    """ Modelo de datos para las velas del mercado cripto.
 
-class KLine(BasePricesModel):
+    #### Propertys
+    - `time_open:   (int)`      Tiempo de apertura de la vela. (UTC)
+    - `price_open:  (Decimal)`  Precio de apertura.
+    - `price_high:  (Decimal)`  Precio más alto en el intervalo.
+    - `price_low:   (Decimal)`  Precio más bajo en el intervalo.
+    - `price_close: (Decimal)`  Precio de cierre.
+    - `time_close:  (int)`      Tiempo de cierre de la vela. (UTC)
+    
+    #### Propertys Variables
+    - `time_delta:  (int)`      time_close - time_open.
+    - `date_delta:  (timedelta)`date_close - date_open.
+    - `date_open:   (datetime)` datetime.fromtimestamp(time_open)
+    - `date_close:  (datetime)` datetime.fromtimestamp(time_close)
+    - `price_body_delta:    (Decimal)` price_close - price_open
+    - `price_shadow_delta:  (Decimal)` price_high - price_low
+    - `is_bullish:  (bool)` price_close > price_open
+    - `is_bearish:  (bool)` price_close < price_open
+    
+    """
     time_open: int = Field(frozen=True, gt=0)   # (UTC) Tiempo de apertura de la vela.
     price_open: Decimal = Field(frozen=True)    # Precio de apertura.
     price_high: Decimal = Field(frozen=True)    # Precio más alto en el intervalo.
     price_low: Decimal = Field(frozen=True)     # Precio más bajo en el intervalo.
     price_close: Decimal = Field(frozen=True)   # Precio de cierre.
     time_close: int = Field(frozen=True, gt=0)  # (UTC) Tiempo de cierre de la vela.
+
+    model_config = ConfigDict(arbitrary_types_allowed=True, validate_assignment=True)
 
     @property
     def time_delta(self) -> int:
@@ -88,7 +107,7 @@ class KLine(BasePricesModel):
         )
 
     @field_validator("price_open", "price_high", "price_low", "price_close", mode="plain")
-    def validate_prices(cls: Type[T_KLine], price: str | Decimal | Decimal128) -> Decimal:
+    def validate_prices(cls, price: str | Decimal | Decimal128) -> Decimal:
         return validate_decimal(price)
     
     @field_serializer("price_open", "price_high", "price_low", "price_close", when_used="always")
