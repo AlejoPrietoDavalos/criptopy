@@ -41,12 +41,19 @@ class SymbolPairsEnum(Enum):
     AXSUSDT = AXSUSDT
 
 
+
+
+INTERVAL_1M = "1m"
+INTERVAL_5M = "5m"
+INTERVAL_1H = "1h"
+INTERVAL_1D = "1d"
+
 class IntervalKLineEnum(Enum):
     """ Intervalos existentes de KLines."""
-    interval_1m = "1m"
-    interval_5m = "5m"
-    interval_1h = "1h"
-    interval_1d = "1d"
+    interval_1m = INTERVAL_1M
+    interval_5m = INTERVAL_5M
+    interval_1h = INTERVAL_1H
+    interval_1d = INTERVAL_1D
 
     @property
     def unit2minutes(self) -> Dict[str, int]:
