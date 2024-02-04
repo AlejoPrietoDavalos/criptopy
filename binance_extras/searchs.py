@@ -15,10 +15,10 @@ class SearchKLines(BaseModel):
     symbol: SymbolPairsEnum
     interval: IntervalEnum
     limit: int = Field(default=1000, gt=0, le=1000)
-    start_time: Optional[int] = Field(default=None, gt=0, alias="startTime")
-    end_time: Optional[int] = Field(default=None, gt=0, alias="endTime")
+    start_time: Optional[int] = Field(default=None, gt=0, serialization_alias="startTime")
+    end_time: Optional[int] = Field(default=None, gt=0, serialization_alias="endTime")
 
-    model_config = ConfigDict(use_enum_values=True)
+    model_config = ConfigDict(use_enum_values=True, validate_assignment=True)
 
     def model_dump(self) -> dict:
         return super().model_dump(by_alias=True, exclude_none=True)
