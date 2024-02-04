@@ -35,6 +35,7 @@ def timestamp2datetime(t: int, is_ms: bool = True) -> datetime:
     return datetime.fromtimestamp(t, tz=UTC)
 
 def datetime2timestamp(date: datetime, in_ms: bool = True) -> int:
+    """ Nota: Se queda con 3 decimales después de la comma del segundo, después redondea."""
     if not is_datetime_utc(date):
         raise ValueError("El datetime debe estar en UTC.")
     t = date.timestamp()
