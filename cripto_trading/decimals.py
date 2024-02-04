@@ -1,6 +1,8 @@
 from decimal import Decimal
 from bson.decimal128 import Decimal128
 
+__all__ = ["serialize_decimal", "validate_decimal"]
+
 def serialize_decimal(decimal: Decimal) -> Decimal128:
     if not isinstance(decimal, Decimal):
         raise ValueError("Se espera una instancia de Decimal.")

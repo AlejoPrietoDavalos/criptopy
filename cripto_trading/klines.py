@@ -21,6 +21,8 @@ from cripto_trading.decimals import validate_decimal, serialize_decimal
 from cripto_trading.base import BasePricesModel
 from cripto_trading.time import timestamp2datetime_utc
 
+__all__ = ["KLine", "KLineList"]
+
 
 T_KLine = TypeVar("T_KLine", bound="KLine")
 
