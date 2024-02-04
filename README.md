@@ -27,6 +27,9 @@ BINANCE_SECRET_KEY="...."
 MONGO_CRIPTO_USER="...."
 MONGO_CRIPTO_PASSWORD="...."
 MONGO_CRIPTO_CLUSTER_DOMAIN="...."
+MONGO_CRIPTO_KLINES="klines"
 ```
 
-
+##### Info sin revisar
+- lumibot Strategy
+- yahoo data backtesting
