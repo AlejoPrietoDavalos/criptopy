@@ -4,8 +4,7 @@ from datetime import datetime
 
 from pydantic import BaseModel, Field, ConfigDict, field_validator
 
-from binance_extras.intervals import IntervalEnum
-from binance_extras.coins import SymbolPairsEnum
+from general_utils.coins import SymbolPairsEnum, IntervalKLineEnum
 from general_utils.time_utc import validate_time_ms
 
 __all__ = ["SearchKLines"]
@@ -13,7 +12,7 @@ __all__ = ["SearchKLines"]
 
 class SearchKLines(BaseModel):
     symbol: SymbolPairsEnum
-    interval: IntervalEnum
+    interval: IntervalKLineEnum
     limit: int = Field(default=1500, gt=0, le=1500)
     start_time: Optional[int] = Field(default=None, gt=0, serialization_alias="startTime")
     end_time: Optional[int] = Field(default=None, gt=0, serialization_alias="endTime")

@@ -7,7 +7,7 @@ from pydantic import BaseModel, Field, ConfigDict
 
 from binance.websocket.binance_socket_manager import BinanceSocketManager
 from binance.websocket.um_futures.websocket_client import UMFuturesWebsocketClient
-from binance_extras.coins import SymbolPairsEnum
+from general_utils.coins import SymbolPairsEnum
 
 import logging
 #from binance.lib.utils import config_logging

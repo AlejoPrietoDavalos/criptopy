@@ -4,8 +4,7 @@ from datetime import datetime
 
 from binance.um_futures import UMFutures
 
-from binance_extras.coins import SymbolPairsEnum
-from binance_extras.intervals import IntervalEnum
+from general_utils.coins import SymbolPairsEnum, IntervalKLineEnum
 from binance_extras.searchs import SearchKLines
 from cripto_trading.kline import KLine
 from general_utils.time_utc import get_timestamp_now, validate_time_ms
@@ -52,7 +51,7 @@ class BinanceManager:
     def iter_mark_price_klines(
             self,
             symbol: SymbolPairsEnum,
-            interval: IntervalEnum,
+            interval: IntervalKLineEnum,
             limit: int,
             start_time: int | datetime,
             end_time: int | datetime,
@@ -70,13 +69,13 @@ class BinanceManager:
     def iter_search_klines(
             self,
             symbol: SymbolPairsEnum,
-            interval: IntervalEnum,
+            interval: IntervalKLineEnum,
             limit: int,
             start_time: int | datetime,
             end_time: int | datetime,
         ) -> Generator[SearchKLines, None, None]:
         """ Realiza la búsqueda de atrás para adelante en el rango de fecha especificado."""
-        ms_interval = IntervalEnum(interval).microseconds
+        ms_interval = IntervalKLineEnum(interval).microseconds
         start_time = validate_time_ms(start_time)
         end_time = validate_time_ms(end_time)
 
