@@ -19,7 +19,7 @@ from bson.decimal128 import Decimal128
 
 from cripto_trading.decimals import validate_decimal, serialize_decimal
 from cripto_trading.base import BasePricesModel
-from cripto_trading.time import time_ms_to_datetime_utc
+from cripto_trading.time import timestamp2datetime_utc
 
 
 T_KLine = TypeVar("T_KLine", bound="KLine")
@@ -44,11 +44,11 @@ class KLine(BasePricesModel):
 
     @property
     def date_open(self) -> datetime:
-        return time_ms_to_datetime_utc(self.time_open)
+        return timestamp2datetime_utc(self.time_open)
     
     @property
     def date_close(self) -> datetime:
-        return time_ms_to_datetime_utc(self.time_close)
+        return timestamp2datetime_utc(self.time_close)
 
     @property
     def price_body_delta(self) -> Decimal:
