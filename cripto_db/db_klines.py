@@ -45,6 +45,12 @@ class DBKLines:
     def collections(self) -> Dict[str, CollectionKLines]:
         return self._collections
 
+    def get_collection(self, symbol: SymbolPairsEnum, interval: IntervalKLineEnum) -> CollectionKLines:
+        symbol, interval = SymbolPairsEnum(symbol), IntervalKLineEnum(interval)
+        coll_name = get_collection_name(symbol, interval)
+        if coll_name not in self.collections:
+            self.collections[coll_name] = CollectionKLines(db=self.db, coll_name=coll_name)
+        return self.collections[coll_name]
     
     def set_unique_keys(self) -> None:
         for symbol, interval in iter_all_symbol_interval():
