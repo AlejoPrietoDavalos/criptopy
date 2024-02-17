@@ -1,5 +1,5 @@
 """ Este módulo contiene todas las monedas de interés."""
-from typing import Generator, Tuple, Dict
+from typing import Generator, Tuple, Dict, List
 from enum import Enum
 
 __all__ = [
@@ -73,6 +73,14 @@ class IntervalKLineEnum(Enum):
         return self.seconds * 1000
 
 
-def iter_all_symbol_interval() -> Generator[Tuple[SymbolPairsEnum, IntervalKLineEnum], None, None]:
+def iter_all_symbol_interval(
+        exclude: List[str] = None
+    ) -> Generator[Tuple[SymbolPairsEnum, IntervalKLineEnum], None, None]:
     """ Itera por todas las convinaciones de `symbols e intervals`."""
-    return ((symbol, interval) for symbol in SymbolPairsEnum for interval in IntervalKLineEnum)
+    for symbol in SymbolPairsEnum:
+        for interval in IntervalKLineEnum:
+            if exclude is not None and f"{symbol.value}_{interval.value}" not in exclude:   # FIXME
+                yield symbol, interval
+
+def get_collection_name(symbol: SymbolPairsEnum, interval: IntervalKLineEnum):
+    return f"{symbol.value}_{interval.value}"

@@ -1,17 +1,15 @@
 from typing import Dict, List
 
-from pymongo import MongoClient, ASCENDING, UpdateOne
+from pymongo import MongoClient, DESCENDING, ASCENDING, UpdateOne
+from pymongo.cursor import Cursor
 from pymongo.results import BulkWriteResult
 from pymongo.database import Database
 from pymongo.collection import Collection
 
 from cripto_db.utils import get_client_cripto_db, get_klines_cripto_db
 from cripto_trading.kline import KLine, TIME_OPEN
-from general_utils.coins import SymbolPairsEnum, IntervalKLineEnum, iter_all_symbol_interval
+from general_utils.coins import SymbolPairsEnum, IntervalKLineEnum, iter_all_symbol_interval, get_collection_name
 
-
-def get_collection_name(symbol: SymbolPairsEnum, interval: IntervalKLineEnum):
-    return f"{symbol.value}_{interval.value}"
 
 def filter_time_open(time_open: int) -> dict:
     return {TIME_OPEN: time_open}
@@ -41,6 +39,9 @@ class CollectionKLines:
         operations = [kline_to_update_one(kline) for kline in klines]
         result = self.collection.bulk_write(operations)
         return result
+
+    def find_klines(self, direction=ASCENDING) -> Cursor:
+        return self.collection.find().sort(TIME_OPEN, direction)
 
 
 class DBKLines:

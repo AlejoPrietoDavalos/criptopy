@@ -108,3 +108,20 @@ class BinanceManager:
             klines.extend(self.mark_price_klines(s))
         klines.sort(key=lambda kline: kline.time_open)
         return klines[0].time_open
+
+    def iter_all_mark_price_klines(
+            self,
+            symbol: SymbolPairsEnum,
+            interval: IntervalKLineEnum
+        ) -> Generator[List[KLine], None, None]:
+        symbol = SymbolPairsEnum(symbol)
+        interval = IntervalKLineEnum(interval)
+        LIMIT = 1500    # FIXME
+
+        time_first = self.timestamp_first_data(symbol)
+        time_end = get_timestamp_now()
+        n_iters = ((time_end - time_first) // (LIMIT*interval.miliseconds)) + 1
+
+        for i, klines in enumerate(self.iter_mark_price_klines(symbol, interval, LIMIT, time_first, time_end), start=1):
+            yield klines
+            print(f"{i}/{n_iters} - {symbol.value}_{interval.value}")
