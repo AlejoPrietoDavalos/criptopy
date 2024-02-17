@@ -33,3 +33,8 @@ MONGO_CRIPTO_KLINES="klines"
 ##### Info sin revisar
 - lumibot Strategy
 - yahoo data backtesting
+
+##### Videítos de youtube salvando la vida nuevamente.
+- https://www.youtube.com/watch?v=lhrCz6t7rmQ
+- https://www.youtube.com/watch?v=bZhtvvFm17A
+- https://www.youtube.com/watch?v=IfoZaCGTJ_Q
