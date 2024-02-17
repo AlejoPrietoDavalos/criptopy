@@ -37,38 +37,27 @@ class Message(BaseModel):
     def printear(self) -> None:
         print(f"MarkPrice={self.p} | IndexPrice={self.P} | EstimatedSettlerPrice={self.i}")
 
-i = 0
-i_last_update = 0
-t, p = [], []
 
 def message_handler(bsm: BinanceSocketManager, msg_str: str):
     """ - `message_str`: Retorna primero un string con: `result` y `id`."""
-    global t, p, i
     try:
         msg_dict = json.loads(msg_str)
         msg = Message(**msg_dict)
-        t.append(i)
-        p.append(msg.price)
-        i += 1
-        #print(msg.model_dump())
-        #print("-"*40)
-        print(t)
-        print(p)
-        print("-"*20)
+        print(msg)
     except Exception as e:
         print(e)
 
 
 
 
-
-
-
+# https://websocketking.com/
+# wss://fstream.binance.com/stream
+# {"method": "SUBSCRIBE", "params": ["btcusdt@markPrice@1s"], "id": 13}
 
 if __name__ == '__main__':
     my_client = UMFuturesWebsocketClient(on_message=message_handler)
     my_client.mark_price(
-        symbol = SymbolPairsEnum.AXSUSDT.value,
+        symbol = SymbolPairsEnum.BTCUSDT.value,
         id = 13,
         speed = 1,
     )
