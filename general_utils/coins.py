@@ -5,7 +5,8 @@ from enum import Enum
 __all__ = [
     "USDT", "BTC", "ETH", "BNB", "AXS",
     "BTCUSDT", "ETHUSDT", "BNBUSDT", "AXSUSDT",
-    "IntervalKLineEnum", "SymbolEnum", "SymbolPairsEnum", "iter_all_symbol_interval",
+    "IntervalKLineEnum", "SymbolEnum", "SymbolPairsEnum",
+    "iter_all_symbol_interval", "get_collection_name"
 ]
 
 

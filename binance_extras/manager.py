@@ -1,15 +1,25 @@
 """ Abstracción de la API de Binance."""
 from typing import List, Generator
+from concurrent.futures import ThreadPoolExecutor, as_completed
+from pathlib import Path
 from datetime import datetime
 
+import pandas as pd
 from binance.um_futures import UMFutures
 
 from general_utils.coins import SymbolPairsEnum, IntervalKLineEnum
 from cripto_trading.kline import KLine
 from general_utils.time_utc import get_timestamp_now, get_datetime, validate_time_ms
-
 from binance_extras.searchs import SearchKLines
 from binance_extras.utils import get_um_futures_client
+
+LIMIT_KLINES = 1500
+
+
+def save_klines(path_out: Path, klines: List[KLine]) -> None:
+    df_klines = pd.DataFrame([kline.model_dump() for kline in klines])
+    df_klines.to_csv(path_out)
+
 
 class BinanceManager:
     def __init__(self, **kwargs):
@@ -116,12 +126,35 @@ class BinanceManager:
         ) -> Generator[List[KLine], None, None]:
         symbol = SymbolPairsEnum(symbol)
         interval = IntervalKLineEnum(interval)
-        LIMIT = 1500    # FIXME
 
         time_first = self.timestamp_first_data(symbol)
         time_end = get_timestamp_now()
-        n_iters = ((time_end - time_first) // (LIMIT*interval.miliseconds)) + 1
+        n_iters = ((time_end - time_first) // (LIMIT_KLINES*interval.miliseconds)) + 1
 
-        for i, klines in enumerate(self.iter_mark_price_klines(symbol, interval, LIMIT, time_first, time_end), start=1):
+        _iter_klines = self.iter_mark_price_klines(
+            symbol = symbol,
+            interval = interval,
+            limit = LIMIT_KLINES,
+            start_time = time_first,
+            end_time = time_end
+        )
+        for i, klines in enumerate(_iter_klines, start=1):
             yield klines
             print(f"{i}/{n_iters} - {symbol.value}_{interval.value}")
+
+    def download_save_klines(
+            self,
+            path_data_klines: Path,
+            symbol: SymbolPairsEnum,
+            interval: IntervalKLineEnum,
+            max_workers: int = 100
+        ) -> None:
+        path_klines_out = path_data_klines / f"{symbol.value}_{interval.value}"
+        if not path_klines_out.exists():
+            path_klines_out.mkdir(exist_ok=True)
+            with ThreadPoolExecutor(max_workers=max_workers) as pool:
+                iter_futures = (pool.submit(save_klines, path_klines_out / f"{i}.csv", klines)
+                                for i, klines in enumerate(self.iter_all_mark_price_klines(symbol, interval)))
+                for future in as_completed(iter_futures):
+                    future.result()
+
