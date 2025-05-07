@@ -10,9 +10,9 @@ def get_uri(username: str, password: str, cluster_domain: str) -> str:
     return f"mongodb+srv://{username}:{password}@{cluster_domain}/?retryWrites=true&w=majority"
 
 def get_uri_cripto_db() -> str:
-    username = os.getenv('MONGO_CRIPTO_USER')
-    password = os.getenv('MONGO_CRIPTO_PASSWORD')
-    cluster_domain = os.getenv("MONGO_CRIPTO_CLUSTER_DOMAIN")
+    username = os.getenv('MONGO_USER')
+    password = os.getenv('MONGO_PASSWORD')
+    cluster_domain = os.getenv("MONGO_CLUSTER_DOMAIN")
     return get_uri(username, password, cluster_domain)
 
 def get_client_cripto_db() -> MongoClient:
@@ -21,4 +21,4 @@ def get_client_cripto_db() -> MongoClient:
     return client
 
 def get_klines_cripto_db(client: MongoClient) -> Database:
-    return client[os.getenv('MONGO_CRIPTO_KLINES')]
+    return client[os.getenv('MONGO_DB_KLINES')]
