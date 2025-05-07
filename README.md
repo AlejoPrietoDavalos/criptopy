@@ -3,10 +3,13 @@
 
 
 # Quick-Start
+##### Generar `.env` y editarlo.
+```bash
+cp .env.example .env
+```
+
 ##### Crear entorno virtual e instalar dependencias.
 ```bash
-cd /path/to/the/project
-
 python3 -m venv env                 # Crear entorno.
 
 source env/bin/activate             # Activar entorno.
